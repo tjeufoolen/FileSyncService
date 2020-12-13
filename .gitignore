@@ -9,3 +9,11 @@ asio-*/
 *.sln
 *.vcxproj
 *.vcxproj.*
+
+# Clion
+.idea/
+
+# Build output
+out/
+cmake-build-debug/
+build/
