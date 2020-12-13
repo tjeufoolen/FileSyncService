@@ -1,0 +1,11 @@
+# OSX
+.DS_Store
+
+# External libraries
+asio-*/
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.*
