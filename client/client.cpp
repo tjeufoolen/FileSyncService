@@ -9,6 +9,21 @@
 #include <string>
 #include <stdexcept>
 #include <asio.hpp>
+#include <filesystem>
+
+std::vector<std::string> splitString(std::string& str, const char delim) {
+    std::vector<std::string> out;
+
+    // construct a stream from the string
+    std::stringstream ss(str);
+
+    std::string s;
+    while (std::getline(ss, s, delim)) {
+        out.push_back(s);
+    }
+
+    return out;
+}
 
 int main() {
     try {
@@ -17,6 +32,7 @@ int main() {
         const char* prompt{ "avansync> " };
         const char* lf{ "\n" };
         const char* crlf{ "\r\n" };
+        const std::string client_directory{std::string(std::filesystem::current_path()).append("/dropbox/")};
 
         asio::ip::tcp::iostream server{ server_address, server_port };
         if (!server) throw std::runtime_error("could not connect to server");
@@ -33,7 +49,22 @@ int main() {
                 std::string req;
 
                 if (getline(std::cin, req)) {
-                    server << req << crlf;
+                    auto args = splitString(req, ' ');
+                    if (args[0] == "put") {
+                        auto client_path = std::string(client_directory).append(args[1]);
+
+                        if (args.size() >= 2 && std::filesystem::exists(client_path)) {
+                            auto size = std::filesystem::file_size(client_path);
+
+                            server << "put " << args[1] << " " << std::to_string(size) << crlf;
+                        } else {
+                            std::cerr << "Error: invalid path" << crlf;
+                        }
+                    }
+
+                    else {
+                        server << req << crlf;
+                    }
                 }
             }
         }

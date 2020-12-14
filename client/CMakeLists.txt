@@ -14,3 +14,5 @@ add_executable(${PROJECT_NAME}
 target_include_directories(
     ${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../asio-1.18.0/include
 )
+
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/dropbox)
