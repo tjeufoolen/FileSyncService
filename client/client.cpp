@@ -26,10 +26,12 @@ int main() {
             if (getline(server, resp)) {
                 resp.erase(resp.end() - 1); // remove '\r'
                 std::cout << resp << lf;
+
                 if (resp == "Bye.") break;
 
                 std::cout << prompt;
                 std::string req;
+
                 if (getline(std::cin, req)) {
                     server << req << crlf;
                 }
