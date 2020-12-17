@@ -4,7 +4,7 @@
 
 int main() {
     try {
-        std::unique_ptr<Client> c = std::make_unique<Client>("localhost", "12345", "/dropbox/");
+        std::unique_ptr<Client> c = std::make_unique<Client>("localhost", "12345");
         c->run();
     }
     catch (const std::exception& ex) {

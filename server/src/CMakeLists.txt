@@ -7,6 +7,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/commands/Command.h"
     "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.h"
     "${CMAKE_CURRENT_LIST_DIR}/commands/QuitCommand.h"
+    "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.h"
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -16,9 +17,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/commands/Command.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/commands/QuitCommand.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.cpp"
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}"
     "${CMAKE_CURRENT_LIST_DIR}/utils"
     "${CMAKE_CURRENT_LIST_DIR}/exceptions"
     "${CMAKE_CURRENT_LIST_DIR}/commands"

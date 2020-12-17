@@ -6,11 +6,13 @@
 #include "Logger.h"
 #include "StringSplitter.h"
 #include "EndSessionException.h"
+#include "MakeDirectoryCommand.h"
 
-Client::Client(const std::string& hostname, const std::string& port, const std::string& baseDirectory)
+const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
+
+Client::Client(const std::string& hostname, const std::string& port)
     : HOSTNAME{hostname},
-      PORT{port},
-      BASE_DIRECTORY{std::filesystem::current_path().generic_string().append(baseDirectory)}
+      PORT{port}
 {
     connect();
 }
@@ -49,15 +51,24 @@ void Client::run()
 
 void Client::handleResponse(const std::string& response)
 {
-    std::cout << response << Utils::Logger::LF;
+    if (response.rfind("Error: ", 0)  == 0) {
+        std::cerr << response << Utils::Logger::LF;
+    } else {
+        std::cout << response << Utils::Logger::LF;
+    }
 }
 
 void Client::handleRequest(const std::string& request, const std::vector<std::string>& args)
 {
-    *server_ << request << Utils::Logger::CRLF;
-    if (args.empty()) return;
+    if (args.empty()) return; // todo: handle no arguments provided
 
-    if (args[0] == "quit") {
+    if (args[0] == "mkdir") {
+        Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
+    }
+    else if (args[0] == "quit") {
         throw Exceptions::EndSessionException();
+    }
+    else {
+        *server_ << args[0] << Utils::Logger::CRLF;
     }
 }

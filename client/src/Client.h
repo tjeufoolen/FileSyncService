@@ -9,11 +9,12 @@ class Client
 {
     const std::string HOSTNAME;
     const std::string PORT;
-    const std::string BASE_DIRECTORY;
 
     std::unique_ptr<asio::ip::tcp::iostream> server_;
 public:
-    Client(const std::string& hostname, const std::string& port, const std::string& baseDirectory);
+    static const std::string BASE_DIRECTORY;
+public:
+    Client(const std::string& hostname, const std::string& port);
 
     void connect();
     void run();

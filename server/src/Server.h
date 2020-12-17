@@ -8,12 +8,13 @@
 class Server
 {
     const int PORT;
-    const std::string BASE_DIRECTORY;
 
     asio::io_context io_context_;
     std::unique_ptr<asio::ip::tcp::acceptor> server_;
 public:
-    Server(int port, const std::string& baseDirectory);
+    static const std::string BASE_DIRECTORY;
+public:
+    Server(int port);
 
     void start();
     void run();

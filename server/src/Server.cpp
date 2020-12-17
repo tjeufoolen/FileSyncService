@@ -8,10 +8,12 @@
 #include "ClientDisconnectException.h"
 #include "InfoCommand.h"
 #include "QuitCommand.h"
+#include "MakeDirectoryCommand.h"
 
-Server::Server(int port, const std::string &baseDirectory)
-    :   PORT{port},
-        BASE_DIRECTORY{std::filesystem::current_path().generic_string().append("/dropbox/")}
+const std::string Server::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
+
+Server::Server(int port)
+    :   PORT{port}
 {
     start();
 }
@@ -61,6 +63,10 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
 
     if (args[0] == "info") {
         Commands::InfoCommand{client, args}.Execute();
+    }
+
+    else if (args[0] == "mkdir") {
+        Commands::MakeDirectoryCommand{client, args}.Execute();
     }
 
     else if (args[0] == "quit") {
