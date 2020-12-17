@@ -17,7 +17,8 @@ public:
     Server(int port);
 
     void start();
-    void run();
+
+    [[noreturn]] void run();
     void handleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args);
 };
 

@@ -1,6 +1,5 @@
 target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/Client.h"
-        "${CMAKE_CURRENT_LIST_DIR}/exceptions/EndSessionException.h"
         "${CMAKE_CURRENT_LIST_DIR}/utils/StringSplitter.h"
         "${CMAKE_CURRENT_LIST_DIR}/utils/Logger.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/ICommand.h"

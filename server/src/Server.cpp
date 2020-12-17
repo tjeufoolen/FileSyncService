@@ -5,9 +5,7 @@
 
 #include "StringSplitter.h"
 #include "Logger.h"
-#include "ClientDisconnectException.h"
 #include "InfoCommand.h"
-#include "QuitCommand.h"
 #include "MakeDirectoryCommand.h"
 
 const std::string Server::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
@@ -27,7 +25,7 @@ void Server::start()
     }
 }
 
-void Server::run()
+[[noreturn]] void Server::run()
 {
     for (;;)
     {
@@ -47,10 +45,10 @@ void Server::run()
             request.erase(request.end() - 1); // remove '\r'
             std::cerr << "client says: " << request << Utils::Logger::LF;
 
-            try {
+            if (request != "quit") {
                 std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(request, ' '));
                 handleRequest(client, *args);
-            } catch(const Exceptions::ClientDisconnectException&) {
+            } else {
                 keepListening = false;
             }
         }
@@ -69,9 +67,5 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
         Commands::MakeDirectoryCommand{client, args}.Execute();
     }
 
-    else if (args[0] == "quit") {
-        Commands::QuitCommand{client, args}.Execute();
-    }
-
-    // todo: handle invalid request
+    // todo: handle invalid request?
 }

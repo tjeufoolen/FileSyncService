@@ -5,7 +5,6 @@
 
 #include "Logger.h"
 #include "StringSplitter.h"
-#include "EndSessionException.h"
 #include "MakeDirectoryCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
@@ -38,11 +37,13 @@ void Client::run()
             std::string req;
 
             if (getline(std::cin, req)) {
-                try {
+                if (req != "quit") {
                     std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
                     handleRequest(req, *args);
-                } catch(const Exceptions::EndSessionException&) {
+                } else {
+                    *server_ << req << Utils::Logger::CRLF;
                     keepRunning = false;
+                    break;
                 }
             }
         }
@@ -58,13 +59,15 @@ void Client::handleRequest(const std::string& request, const std::vector<std::st
 {
     if (args.empty()) return; // todo: handle no arguments provided
 
+    // complex commands
     if (args[0] == "mkdir") {
         Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
     }
-    else if (args[0] == "quit") {
-        throw Exceptions::EndSessionException();
-    }
+
+    // simple commands
     else {
-        *server_ << args[0] << Utils::Logger::CRLF;
+        *server_ << request << Utils::Logger::CRLF;
     }
+
+    // todo: handle invalid action?
 }
