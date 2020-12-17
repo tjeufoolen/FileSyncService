@@ -51,11 +51,7 @@ void Client::run()
 
 void Client::handleResponse(const std::string& response)
 {
-    if (response.rfind("Error: ", 0)  == 0) {
-        std::cerr << response << Utils::Logger::LF;
-    } else {
-        std::cout << response << Utils::Logger::LF;
-    }
+    std::cout << response << Utils::Logger::LF;
 }
 
 void Client::handleRequest(const std::string& request, const std::vector<std::string>& args)

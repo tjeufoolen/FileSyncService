@@ -19,7 +19,9 @@ namespace Commands {
             auto parentDir = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
             auto& name = commandArgs_[1];
 
-            fs::create_directory(std::string(parentDir).append("/").append(name));
+            if (fs::exists(parentDir)) {
+                fs::create_directory(std::string(parentDir).append("/").append(name));
+            }
         }
 
         server_ << request_ << Utils::Logger::CRLF;
