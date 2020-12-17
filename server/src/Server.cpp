@@ -2,12 +2,12 @@
 
 #include <filesystem>
 #include <iostream>
-#include <numeric>
 
 #include "StringSplitter.h"
 #include "Logger.h"
 #include "ClientDisconnectException.h"
 #include "InfoCommand.h"
+#include "QuitCommand.h"
 
 Server::Server(int port, const std::string &baseDirectory)
     :   PORT{port},
@@ -62,9 +62,7 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
     }
 
     else if (args[0] == "quit") {
-        std::string request = std::accumulate(args.begin(), args.end(), std::string(" "));
-        client << request << Utils::Logger::CRLF;
-        throw Exceptions::ClientDisconnectException();
+        Commands::QuitCommand{client, args}.Execute();
     }
 
     // todo: handle invalid request

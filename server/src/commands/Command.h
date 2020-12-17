@@ -14,6 +14,7 @@ namespace Commands {
     protected:
         asio::ip::tcp::iostream& client_;
         std::vector<std::string> args_;
+        std::vector<std::string> commandArgs_;
     };
 }
 

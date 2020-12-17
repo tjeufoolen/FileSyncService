@@ -2,10 +2,10 @@
 
 namespace Commands {
     Command::Command(asio::ip::tcp::iostream& client, const std::vector<std::string>& args)
-            :   client_{client}
+            :   client_{client},
+                args_{args},
+                commandArgs_{args}
     {
-        std::vector<std::string> commandArgs { args };
-        commandArgs.erase(commandArgs.begin());
-        args_ = commandArgs;
+        commandArgs_.erase(commandArgs_.begin()); // remove actual command from args
     }
 }
