@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/server.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt")
