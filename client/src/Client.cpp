@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Logger.h"
+#include "StringSplitter.h"
 #include "EndSessionException.h"
 
 Client::Client(const std::string& hostname, const std::string& port, const std::string& baseDirectory)
@@ -36,7 +37,8 @@ void Client::run()
 
             if (getline(std::cin, req)) {
                 try {
-                    handleRequest(req);
+                    std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
+                    handleRequest(req, *args);
                 } catch(const Exceptions::EndSessionException&) {
                     keepRunning = false;
                 }
@@ -50,11 +52,12 @@ void Client::handleResponse(const std::string& response)
     std::cout << response << Utils::Logger::LF;
 }
 
-void Client::handleRequest(const std::string& request)
+void Client::handleRequest(const std::string& request, const std::vector<std::string>& args)
 {
     *server_ << request << Utils::Logger::CRLF;
+    if (args.empty()) return;
 
-    if (request == "quit") {
+    if (args[0] == "quit") {
         throw Exceptions::EndSessionException();
     }
 }

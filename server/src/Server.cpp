@@ -45,8 +45,8 @@ void Server::run()
             request.erase(request.end() - 1); // remove '\r'
             std::cerr << "client says: " << request << Utils::Logger::LF;
 
-            std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(request, ' '));
             try {
+                std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(request, ' '));
                 handleRequest(client, *args);
             } catch(const Exceptions::ClientDisconnectException&) {
                 keepListening = false;
@@ -57,6 +57,8 @@ void Server::run()
 
 void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args)
 {
+    if (args.empty()) return; // todo: handle empty request
+
     if (args[0] == "info") {
         Commands::InfoCommand{client, args}.Execute();
     }
@@ -66,7 +68,4 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
     }
 
     // todo: handle invalid request
-    else {
-
-    }
 }

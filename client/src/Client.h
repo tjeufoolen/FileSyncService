@@ -19,7 +19,7 @@ public:
     void run();
 
     void handleResponse(const std::string& response);
-    void handleRequest(const std::string& request);
+    void handleRequest(const std::string& request, const std::vector<std::string>& args);
 };
 
 #endif //CPPLS2_CLIENT_CLIENT_H
