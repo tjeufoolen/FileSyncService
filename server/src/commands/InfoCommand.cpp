@@ -10,6 +10,6 @@ namespace Commands {
 
     void InfoCommand::Execute()
     {
-        client_ << "AvanSync server 1.0, copyright (c) 2020 Bob Polis." << Utils::Logger::CRLF;
+        client_ << "Dropbox server 1.0, copyright (c) 2021 Tjeu Foolen." << Utils::Logger::CRLF;
     }
 }
