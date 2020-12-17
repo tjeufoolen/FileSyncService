@@ -22,9 +22,9 @@ Elaboration of final assessment for the CPPLS2 module.
 | Command syntax               | Server response                                     |
 |------------------------------|-----------------------------------------------------|
 | `info`                       | Dropbox server 1.0, copyright (c) 2021 Tjeu Foolen. |
-| `dir <path>`                 | `F|file1.txt|2020-03-05 23:45:18|34107`             |
-|                              | `D|Private|2020-03-05 23:45:18|0`                   |
-|                              | `*|my_symlink|2020-03-05 23:45:18|0`                |
+| `dir <path>`                 | `F\|file1.txt\|2020-03-05 23:45:18\|34107`             |
+|                              | `D\|Private\|2020-03-05 23:45:18\|0`                   |
+|                              | `*\|my_symlink\|2020-03-05 23:45:18\|0`                |
 |                              | Error: no such directory                            |
 | `get <path>`                 | Actual file                                         |
 |                              | Error: no such file                                 |
