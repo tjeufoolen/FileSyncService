@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "StringSplitter.h"
 #include "MakeDirectoryCommand.h"
+#include "InfoCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -86,8 +87,7 @@ void Client::handleCommand(const std::string &request, const std::vector<std::st
         expect_response_ = Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
     }
     else if (args[0] == "info") {
-        *server_ << request << Utils::Logger::CRLF;
-        expect_response_ = true;
+        expect_response_ = Commands::InfoCommand{*server_, request, args}.Execute();
     }
 
     // handle specified command isn't defined

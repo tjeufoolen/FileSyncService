@@ -5,6 +5,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/commands/ICommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/Command.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.h"
         )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -13,6 +14,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/utils/Logger.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/commands/Command.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.cpp"
         )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
