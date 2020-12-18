@@ -7,6 +7,7 @@
 #include "StringSplitter.h"
 #include "MakeDirectoryCommand.h"
 #include "InfoCommand.h"
+#include "DeleteCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -88,6 +89,9 @@ void Client::handleCommand(const std::string &request, const std::vector<std::st
     }
     else if (args[0] == "info") {
         expect_response_ = Commands::InfoCommand{*server_, request, args}.Execute();
+    }
+    else if (args[0] == "del") {
+        expect_response_ = Commands::DeleteCommand{*server_, request, args}.Execute();
     }
 
     // handle specified command isn't defined

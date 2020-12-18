@@ -2,7 +2,10 @@
 #define CPPLS2_SERVER_COMMAND_H
 
 #include "ICommand.h"
+
 #include <asio.hpp>
+
+#include "Logger.h"
 
 namespace Commands {
     class Command : public ICommand

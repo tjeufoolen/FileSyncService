@@ -1,9 +1,9 @@
 #include "MakeDirectoryCommand.h"
-#include "Logger.h"
-#include "Server.h"
 
 #include <filesystem>
 #include <iostream>
+
+#include "Server.h"
 
 #define fs std::filesystem
 
@@ -30,7 +30,6 @@ namespace Commands {
                     client_ << "OK" << Utils::Logger::CRLF;
                 }
                 else {
-                    std::cerr << parentDir << std::endl;
                     client_ << "Error: no such directory" << Utils::Logger::CRLF;
                 }
             }

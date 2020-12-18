@@ -7,6 +7,7 @@
 #include "Logger.h"
 #include "InfoCommand.h"
 #include "MakeDirectoryCommand.h"
+#include "DeleteCommand.h"
 
 const std::string Server::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -59,13 +60,16 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
 {
     if (args.empty()) return; // todo: handle empty request
 
+    // execute specified command
     if (args[0] == "info") {
         Commands::InfoCommand{client, args}.Execute();
     }
-
     else if (args[0] == "mkdir") {
         Commands::MakeDirectoryCommand{client, args}.Execute();
     }
+    else if (args[0] == "del") {
+        Commands::DeleteCommand{client, args}.Execute();
+    }
 
-    // todo: handle invalid request?
+    // todo: handle specified command isn't defined
 }
