@@ -12,6 +12,7 @@ class Client
 
     std::unique_ptr<asio::ip::tcp::iostream> server_;
     bool expect_response_;
+    bool multiple_responses_incoming_;
 public:
     static const std::string BASE_DIRECTORY;
 public:

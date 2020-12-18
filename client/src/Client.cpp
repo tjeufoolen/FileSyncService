@@ -9,13 +9,15 @@
 #include "InfoCommand.h"
 #include "DeleteCommand.h"
 #include "RenameCommand.h"
+#include "DirectoryListingCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
 Client::Client(const std::string& hostname, const std::string& port)
     : HOSTNAME{hostname},
       PORT{port},
-      expect_response_{true}
+      expect_response_{true},
+      multiple_responses_incoming_{false}
 {
     connect();
 }
@@ -30,13 +32,28 @@ void Client::run()
 {
     bool keepRunning{true};
     while (keepRunning && *server_) {
-        std::string resp;
-
         // Response
-        if (expect_response_ && getline(*server_, resp)) {
-            resp.erase(resp.end() - 1); // remove '\r'
+        if (expect_response_) {
+            std::string resp;
 
-            handleResponse(resp);
+            // default amount of responses on input = 1
+            int responses = 1;
+
+            // if multiple responses are expected, update the responses amount
+            if (multiple_responses_incoming_) {
+                getline(*server_, resp);
+                resp.erase(resp.end() - 1); // remove '\r'
+                responses = std::stoi(resp);
+                multiple_responses_incoming_ = false;
+            }
+
+            // handle all responses
+            for (int i=0; i<responses; i++) {
+                getline(*server_, resp);
+                resp.erase(resp.end() - 1); // remove '\r'
+                handleResponse(resp);
+            }
+
             keepRunning = handleRequest();
         } else {
             keepRunning = handleRequest();
@@ -60,18 +77,17 @@ bool Client::handleRequest()
     std::string req;
 
     // get user input
-    if (getline(std::cin, req)) {
-        // notify server that you are gonna disconnect and stop running
-        if (req == "quit") {
-            *server_ << req << Utils::Logger::CRLF;
-            return false;
-        }
+    getline(std::cin, req);
 
-        // if you aren't gonna disconnect, execute the command specified
-        std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
-        handleCommand(req, *args);
-        return true;
+    // notify server that you are gonna disconnect and stop running
+    if (req == "quit") {
+        *server_ << req << Utils::Logger::CRLF;
+        return false;
     }
+
+    // if you aren't gonna disconnect, execute the command specified
+    std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
+    handleCommand(req, *args);
     return true;
 }
 
@@ -96,6 +112,10 @@ void Client::handleCommand(const std::string &request, const std::vector<std::st
     }
     else if (args[0] == "ren") {
         expect_response_ = Commands::RenameCommand{*server_, request, args}.Execute();
+    }
+    else if (args[0] == "dir") {
+        expect_response_ = Commands::DirectoryListingCommand{*server_, request, args}.Execute();
+        multiple_responses_incoming_ = true;
     }
 
     // handle specified command isn't defined

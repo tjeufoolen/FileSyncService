@@ -31,7 +31,7 @@ namespace Commands {
                 server_ << request_ << Utils::Logger::CRLF;
                 return true;
             } else {
-                Utils::Logger::error("Error: Specified file or directory does not exist.");
+                Utils::Logger::error("Error: no such file or directory");
                 return false;
             }
         }

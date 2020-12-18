@@ -1,4 +1,4 @@
-#include "DeleteCommand.h"
+#include "DirectoryListingCommand.h"
 
 #include <filesystem>
 
@@ -7,28 +7,26 @@
 #define fs std::filesystem
 
 namespace Commands {
-    DeleteCommand::DeleteCommand(asio::ip::tcp::iostream &server, const std::string &request,
-                                 const std::vector<std::string> &args)
+    DirectoryListingCommand::DirectoryListingCommand(asio::ip::tcp::iostream &server, const std::string &request,
+                                                     const std::vector<std::string> &args)
          :  Command(server, request, args)
     {
 
     }
 
-    bool DeleteCommand::Execute()
+    bool DirectoryListingCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file or directory.");
+            Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a directory.");
             return false;
         } else {
             auto path = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
 
             if (fs::exists(path)) {
-                fs::remove_all(path);
-
                 server_ << request_ << Utils::Logger::CRLF;
                 return true;
             } else {
-                Utils::Logger::error("Error: no such file or directory");
+                Utils::Logger::error("Error: no such directory");
                 return false;
             }
         }

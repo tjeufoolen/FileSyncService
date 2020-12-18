@@ -9,6 +9,7 @@
 #include "MakeDirectoryCommand.h"
 #include "DeleteCommand.h"
 #include "RenameCommand.h"
+#include "DirectoryListingCommand.h"
 
 const std::string Server::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -73,6 +74,9 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
     }
     else if (args[0] == "ren") {
         Commands::RenameCommand{client, args}.Execute();
+    }
+    else if (args[0] == "dir") {
+        Commands::DirectoryListingCommand{client, args}.Execute();
     }
 
     // todo: handle specified command isn't defined

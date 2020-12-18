@@ -29,7 +29,7 @@ namespace Commands {
                 server_ << request_ << Utils::Logger::CRLF;
                 return true;
             } else {
-                Utils::Logger::error("Error: Specified parent directory does not exist.");
+                Utils::Logger::error("Error: no such directory");
                 return false;
             }
         }

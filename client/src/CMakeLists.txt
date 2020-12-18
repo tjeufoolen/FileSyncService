@@ -8,6 +8,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/DeleteCommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/RenameCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DirectoryListingCommand.h"
         )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -19,6 +20,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/commands/DeleteCommand.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/commands/RenameCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DirectoryListingCommand.cpp"
         )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
