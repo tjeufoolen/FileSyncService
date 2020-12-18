@@ -16,7 +16,7 @@ namespace Commands {
 
     void MakeDirectoryCommand::Execute()
     {
-        if (commandArgs_.size() >= 2) // todo: handle not enough arguments given
+        if (commandArgs_.size() >= 2)
         {
             auto parentDir = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
             auto& name = commandArgs_[1];

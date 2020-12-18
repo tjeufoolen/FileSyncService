@@ -8,6 +8,7 @@
 #include "MakeDirectoryCommand.h"
 #include "InfoCommand.h"
 #include "DeleteCommand.h"
+#include "RenameCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -92,6 +93,9 @@ void Client::handleCommand(const std::string &request, const std::vector<std::st
     }
     else if (args[0] == "del") {
         expect_response_ = Commands::DeleteCommand{*server_, request, args}.Execute();
+    }
+    else if (args[0] == "ren") {
+        expect_response_ = Commands::RenameCommand{*server_, request, args}.Execute();
     }
 
     // handle specified command isn't defined
