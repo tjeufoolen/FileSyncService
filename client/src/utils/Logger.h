@@ -10,6 +10,9 @@ namespace Utils {
         static const std::string LF;
         static const std::string CRLF;
         static const std::string PREFIX;
+
+        static void inform(const std::string& message);
+        static void error(const std::string& message);
     };
 }
 

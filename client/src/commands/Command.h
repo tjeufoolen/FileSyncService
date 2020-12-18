@@ -11,7 +11,7 @@ namespace Commands {
     public:
         Command(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
 
-        virtual void Execute() = 0;
+        virtual bool Execute() = 0;
     protected:
         asio::ip::tcp::iostream& server_;
         std::string request_;

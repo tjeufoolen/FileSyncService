@@ -4,7 +4,8 @@
 namespace Commands {
     struct ICommand
     {
-        virtual void Execute() = 0;
+        // The boolean return types specifies if the command should expect a response after
+        virtual bool Execute() = 0;
     };
 }
 

@@ -35,7 +35,7 @@ void Server::start()
         server_->accept(client.socket());
         std::cerr << "client connected from " << client.socket().local_endpoint() << Utils::Logger::LF;
 
-        client << "Welcome to AvanSync server 1.0" << Utils::Logger::CRLF;
+        client << "Welcome to Dropbox server 1.0" << Utils::Logger::CRLF;
 
         bool keepListening{true};
         while (keepListening)

@@ -1,6 +1,7 @@
 #include "MakeDirectoryCommand.h"
 
 #include <filesystem>
+#include <iostream>
 
 #include "Client.h"
 
@@ -13,17 +14,22 @@ namespace Commands {
 
     }
 
-    void MakeDirectoryCommand::Execute()
+    bool MakeDirectoryCommand::Execute()
     {
-        if (commandArgs_.size() >= 2) {
+        if (commandArgs_.size() < 2) {
+            Utils::Logger::inform("Too less arguments specified.\nPlease specify a parent directory and a name.");
+            return false;
+        }
+        else {
             auto parentDir = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
             auto& name = commandArgs_[1];
 
             if (fs::exists(parentDir)) {
                 fs::create_directory(std::string(parentDir).append("/").append(name));
             }
-        }
 
-        server_ << request_ << Utils::Logger::CRLF;
+            server_ << request_ << Utils::Logger::CRLF;
+            return true;
+        }
     }
 }

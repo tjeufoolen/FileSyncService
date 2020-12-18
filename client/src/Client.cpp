@@ -11,7 +11,8 @@ const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().gene
 
 Client::Client(const std::string& hostname, const std::string& port)
     : HOSTNAME{hostname},
-      PORT{port}
+      PORT{port},
+      expect_response_{true}
 {
     connect();
 }
@@ -25,49 +26,73 @@ void Client::connect()
 void Client::run()
 {
     bool keepRunning{true};
-    while (server_.get() && keepRunning) {
+    while (keepRunning && *server_) {
         std::string resp;
 
-        if (getline(*server_, resp)) {
+        // Response
+        if (expect_response_ && getline(*server_, resp)) {
             resp.erase(resp.end() - 1); // remove '\r'
 
             handleResponse(resp);
-
-            std::cout << Utils::Logger::PREFIX;
-            std::string req;
-
-            if (getline(std::cin, req)) {
-                if (req != "quit") {
-                    std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
-                    handleRequest(req, *args);
-                } else {
-                    *server_ << req << Utils::Logger::CRLF;
-                    keepRunning = false;
-                    break;
-                }
-            }
+            keepRunning = handleRequest();
+        } else {
+            keepRunning = handleRequest();
         }
     }
 }
 
 void Client::handleResponse(const std::string& response)
 {
-    std::cout << response << Utils::Logger::LF;
+    // if the response is an error (following the protocol), have the ability to print it different
+    if (response.rfind("Error: ", 0) == 0) {
+        Utils::Logger::error(response);
+    } else {
+        Utils::Logger::inform(response);
+    }
 }
 
-void Client::handleRequest(const std::string& request, const std::vector<std::string>& args)
+bool Client::handleRequest()
 {
-    if (args.empty()) return; // todo: handle no arguments provided
+    std::cout << Utils::Logger::PREFIX << std::flush;
+    std::string req;
 
-    // complex commands
+    // get user input
+    if (getline(std::cin, req)) {
+        // notify server that you are gonna disconnect and stop running
+        if (req == "quit") {
+            *server_ << req << Utils::Logger::CRLF;
+            return false;
+        }
+
+        // if you aren't gonna disconnect, execute the command specified
+        std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
+        handleCommand(req, *args);
+        return true;
+    }
+    return true;
+}
+
+void Client::handleCommand(const std::string &request, const std::vector<std::string> &args)
+{
+    // handle no arguments provided
+    if (args.empty()) {
+        Utils::Logger::inform("Please specify a valid command.");
+        expect_response_ = false;
+        return;
+    }
+
+    // execute specified command
     if (args[0] == "mkdir") {
-        Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
+        expect_response_ = Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
     }
-
-    // simple commands
-    else {
+    else if (args[0] == "info") {
         *server_ << request << Utils::Logger::CRLF;
+        expect_response_ = true;
     }
 
-    // todo: handle invalid action?
+    // handle specified command isn't defined
+    else {
+        Utils::Logger::inform("The command you entered does not exist.");
+        expect_response_ = false;
+    }
 }

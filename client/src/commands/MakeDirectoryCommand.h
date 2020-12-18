@@ -8,7 +8,7 @@ namespace Commands {
     {
     public:
         MakeDirectoryCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
-        void Execute() override;
+        bool Execute() override;
     };
 }
 
