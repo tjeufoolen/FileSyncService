@@ -10,6 +10,7 @@
 #include "DeleteCommand.h"
 #include "RenameCommand.h"
 #include "DirectoryListingCommand.h"
+#include "DownloadFileCommand.h"
 
 const std::string Server::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -80,5 +81,8 @@ void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<st
     }
     else if (cmd == "dir") {
         Commands::DirectoryListingCommand{client, args}.Execute();
+    }
+    else if (cmd == "get") {
+        Commands::DownloadFileCommand{client, args}.Execute();
     }
 }
