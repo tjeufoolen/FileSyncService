@@ -8,7 +8,9 @@ namespace Commands {
     {
     public:
         DirectoryListingCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+
         bool Execute() override;
+        void HandleResponse() override;
     };
 }
 

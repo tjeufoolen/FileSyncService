@@ -10,14 +10,13 @@
 #include "DeleteCommand.h"
 #include "RenameCommand.h"
 #include "DirectoryListingCommand.h"
+#include "QuitCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
 Client::Client(const std::string& hostname, const std::string& port)
     : HOSTNAME{hostname},
-      PORT{port},
-      expect_response_{true},
-      multiple_responses_incoming_{false}
+      PORT{port}
 {
     connect();
 }
@@ -30,97 +29,62 @@ void Client::connect()
 
 void Client::run()
 {
-    bool keepRunning{true};
-    while (keepRunning && *server_) {
-        // Response
-        if (expect_response_) {
-            std::string resp;
+    if (*server_) {
+        // Retrieve welcome message
+        std::string message;
+        getline(*server_, message);
+        message.erase(message.end() - 1); // remove '\r'
+        Utils::Logger::inform(message);
 
-            // default amount of responses on input = 1
-            int responses = 1;
+        // Keep handling requests until specified not to
+        bool keepRunning{true};
+        while (keepRunning && *server_)
+        {
+            std::cout << Utils::Logger::PREFIX << std::flush;
+            std::string req;
 
-            // if multiple responses are expected, update the responses amount
-            if (multiple_responses_incoming_) {
-                getline(*server_, resp);
-                resp.erase(resp.end() - 1); // remove '\r'
-                responses = std::stoi(resp);
-                multiple_responses_incoming_ = false;
-            }
+            // get user input
+            getline(std::cin, req);
 
-            // handle all responses
-            for (int i=0; i<responses; i++) {
-                getline(*server_, resp);
-                resp.erase(resp.end() - 1); // remove '\r'
-                handleResponse(resp);
-            }
-
-            keepRunning = handleRequest();
-        } else {
-            keepRunning = handleRequest();
+            // handle request
+            std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
+            keepRunning = handleCommand(req, *args);
         }
     }
 }
 
-void Client::handleResponse(const std::string& response)
-{
-    // if the response is an error (following the protocol), have the ability to print it different
-    if (response.rfind("Error: ", 0) == 0) {
-        Utils::Logger::error(response);
-    } else {
-        Utils::Logger::inform(response);
-    }
-}
-
-bool Client::handleRequest()
-{
-    std::cout << Utils::Logger::PREFIX << std::flush;
-    std::string req;
-
-    // get user input
-    getline(std::cin, req);
-
-    // notify server that you are gonna disconnect and stop running
-    if (req == "quit") {
-        *server_ << req << Utils::Logger::CRLF;
-        return false;
-    }
-
-    // if you aren't gonna disconnect, execute the command specified
-    std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
-    handleCommand(req, *args);
-    return true;
-}
-
-void Client::handleCommand(const std::string &request, const std::vector<std::string> &args)
+bool Client::handleCommand(const std::string &request, const std::vector<std::string> &args)
 {
     // handle no arguments provided
     if (args.empty()) {
         Utils::Logger::inform("Please specify a valid command.");
-        expect_response_ = false;
-        return;
+        return true;
     }
 
     // execute specified command
-    if (args[0] == "mkdir") {
-        expect_response_ = Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
+    std::string cmd = args[0];
+    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
+
+    if (cmd == "quit") {
+        return Commands::QuitCommand{*server_, request, args}.Execute();
     }
-    else if (args[0] == "info") {
-        expect_response_ = Commands::InfoCommand{*server_, request, args}.Execute();
+    else if (cmd == "mkdir") {
+        return Commands::MakeDirectoryCommand{*server_, request, args}.Execute();
     }
-    else if (args[0] == "del") {
-        expect_response_ = Commands::DeleteCommand{*server_, request, args}.Execute();
+    else if (cmd == "info") {
+        return Commands::InfoCommand{*server_, request, args}.Execute();
     }
-    else if (args[0] == "ren") {
-        expect_response_ = Commands::RenameCommand{*server_, request, args}.Execute();
+    else if (cmd == "del") {
+        return Commands::DeleteCommand{*server_, request, args}.Execute();
     }
-    else if (args[0] == "dir") {
-        expect_response_ = Commands::DirectoryListingCommand{*server_, request, args}.Execute();
-        multiple_responses_incoming_ = true;
+    else if (cmd == "ren") {
+        return Commands::RenameCommand{*server_, request, args}.Execute();
+    }
+    else if (cmd == "dir") {
+        return Commands::DirectoryListingCommand{*server_, request, args}.Execute();
     }
 
-    // handle specified command isn't defined
-    else {
-        Utils::Logger::inform("The command you entered does not exist.");
-        expect_response_ = false;
-    }
+    // If we got here, it means that the command entered is not defined.
+    Utils::Logger::inform("The command you entered does not exist.");
+    return true;
 }

@@ -11,8 +11,6 @@ class Client
     const std::string PORT;
 
     std::unique_ptr<asio::ip::tcp::iostream> server_;
-    bool expect_response_;
-    bool multiple_responses_incoming_;
 public:
     static const std::string BASE_DIRECTORY;
 public:
@@ -21,9 +19,8 @@ public:
     void connect();
     void run();
 
-    void handleResponse(const std::string& response);
-    bool handleRequest();
-    void handleCommand(const std::string& request, const std::vector<std::string>& args);
+    // boolean return type indicates if we should stop running or not.
+    bool handleCommand(const std::string& request, const std::vector<std::string>& args);
 };
 
 #endif //CPPLS2_CLIENT_CLIENT_H

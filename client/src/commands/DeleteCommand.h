@@ -7,6 +7,7 @@ namespace Commands {
     class DeleteCommand : public Command {
     public:
         DeleteCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+
         bool Execute() override;
     };
 }

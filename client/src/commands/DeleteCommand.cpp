@@ -18,7 +18,7 @@ namespace Commands {
     {
         if (commandArgs_.empty()) {
             Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file or directory.");
-            return false;
+            return true;
         } else {
             auto path = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
 
@@ -26,10 +26,12 @@ namespace Commands {
                 fs::remove_all(path);
 
                 server_ << request_ << Utils::Logger::CRLF;
+                Command::HandleResponse();
+
                 return true;
             } else {
                 Utils::Logger::error("Error: no such file or directory");
-                return false;
+                return true;
             }
         }
     }

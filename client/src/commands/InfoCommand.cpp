@@ -11,6 +11,7 @@ namespace Commands {
     bool InfoCommand::Execute()
     {
         server_ << request_ << Utils::Logger::CRLF;
+        Command::HandleResponse();
         return true;
     }
 }

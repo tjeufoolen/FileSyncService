@@ -17,7 +17,7 @@ namespace Commands {
     {
         if (commandArgs_.size() < 2) {
             Utils::Logger::error("Too less arguments specified.\nPlease specify a parent directory and a name.");
-            return false;
+            return true;
         }
         else {
             auto parentDir = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
@@ -27,10 +27,12 @@ namespace Commands {
                 fs::create_directory(std::string(parentDir).append("/").append(name));
 
                 server_ << request_ << Utils::Logger::CRLF;
+                Command::HandleResponse();
+
                 return true;
             } else {
                 Utils::Logger::error("Error: no such directory");
-                return false;
+                return true;
             }
         }
     }

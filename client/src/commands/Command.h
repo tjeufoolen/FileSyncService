@@ -12,9 +12,11 @@ namespace Commands {
         Command(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
 
         virtual bool Execute() = 0;
+        virtual void HandleResponse();
     protected:
         asio::ip::tcp::iostream& server_;
         std::string request_;
+        std::string response_;
         std::vector<std::string> args_;
         std::vector<std::string> commandArgs_;
     };

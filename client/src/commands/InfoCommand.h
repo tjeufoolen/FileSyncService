@@ -8,6 +8,7 @@ namespace Commands {
     {
     public:
         InfoCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+
         bool Execute() override;
     };
 }
