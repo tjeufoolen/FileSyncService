@@ -60,24 +60,25 @@ void Server::start()
 
 void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args)
 {
-    if (args.empty()) return; // todo: handle empty request
+    if (args.empty()) return;
 
     // execute specified command
-    if (args[0] == "info") {
+    std::string cmd = args[0];
+    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
+
+    if (cmd == "info") {
         Commands::InfoCommand{client, args}.Execute();
     }
-    else if (args[0] == "mkdir") {
+    else if (cmd == "mkdir") {
         Commands::MakeDirectoryCommand{client, args}.Execute();
     }
-    else if (args[0] == "del") {
+    else if (cmd == "del") {
         Commands::DeleteCommand{client, args}.Execute();
     }
-    else if (args[0] == "ren") {
+    else if (cmd == "ren") {
         Commands::RenameCommand{client, args}.Execute();
     }
-    else if (args[0] == "dir") {
+    else if (cmd == "dir") {
         Commands::DirectoryListingCommand{client, args}.Execute();
     }
-
-    // todo: handle specified command isn't defined
 }
