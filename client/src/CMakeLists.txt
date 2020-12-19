@@ -1,21 +1,35 @@
-#target_sources(${PROJECT_NAME} PRIVATE
-#        "${CMAKE_CURRENT_LIST_DIR}/app.hpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/models/graph.hpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/models/vector2d.hpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/utils/logger.hpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/utils/colour.hpp"
-#        )
-#
-#target_sources(${PROJECT_NAME} PRIVATE
-#        "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/app.cpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/models/graph.cpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/models/vector2d.cpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/utils/logger.cpp"
-#        "${CMAKE_CURRENT_LIST_DIR}/utils/colour.cpp"
-#        )
-#
-#target_include_directories(${PROJECT_NAME} PRIVATE
-#        "${CMAKE_CURRENT_LIST_DIR}/models"
-#        "${CMAKE_CURRENT_LIST_DIR}/utils"
-#        )
+target_sources(${PROJECT_NAME} PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/Client.h"
+        "${CMAKE_CURRENT_LIST_DIR}/utils/StringSplitter.h"
+        "${CMAKE_CURRENT_LIST_DIR}/utils/Logger.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/ICommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/Command.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DeleteCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/RenameCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DirectoryListingCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/QuitCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DownloadFileCommand.h"
+        )
+
+target_sources(${PROJECT_NAME} PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/Client.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/utils/StringSplitter.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/utils/Logger.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/Command.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/InfoCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DeleteCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/RenameCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DirectoryListingCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/QuitCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/DownloadFileCommand.cpp"
+        )
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}"
+        "${CMAKE_CURRENT_LIST_DIR}/exceptions"
+        "${CMAKE_CURRENT_LIST_DIR}/commands"
+        "${CMAKE_CURRENT_LIST_DIR}/utils"
+        )
