@@ -2,6 +2,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/Client.h"
         "${CMAKE_CURRENT_LIST_DIR}/utils/StringSplitter.h"
         "${CMAKE_CURRENT_LIST_DIR}/utils/Logger.h"
+        "${CMAKE_CURRENT_LIST_DIR}/utils/TimestampConverter.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/ICommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/Command.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.h"

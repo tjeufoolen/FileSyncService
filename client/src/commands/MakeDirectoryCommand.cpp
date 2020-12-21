@@ -20,8 +20,8 @@ namespace Commands {
             return true;
         }
         else {
-            auto parentDir = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
-            auto& name = commandArgs_[1];
+            auto parentDir { std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]) };
+            auto& name { commandArgs_[1] };
 
             if (fs::exists(parentDir)) {
                 fs::create_directory(std::string(parentDir).append("/").append(name));

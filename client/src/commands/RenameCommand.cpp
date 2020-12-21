@@ -21,9 +21,9 @@ namespace Commands {
             return true;
         }
         else {
-            auto path = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
-            auto newName = commandArgs_[1];
-            auto newPath = fs::path(std::string(path)).parent_path().generic_string().append("/").append(commandArgs_[1]);
+            auto path { std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]) };
+            auto newName { commandArgs_[1] };
+            auto newPath { fs::path(std::string(path)).parent_path().generic_string().append("/").append(commandArgs_[1]) };
 
             if (fs::exists(path)) {
                 fs::rename(path, newPath);

@@ -14,15 +14,17 @@ namespace Commands {
         };
         struct Item {
             ItemType Type;
+            std::string Path;
             std::string Name;
-            long long ModifiedAt;
-            long long Size;
+            std::string ModifiedAt;
+            std::string Size;
 
-            Item(const ItemType& type, const std::string& name, long long modified_at, long long size)
-                :  Type{type}, Name{name}, ModifiedAt{modified_at}, Size{size}  {}
+            Item(const ItemType& type, const std::string& name, const std::string& path, const std::string& modified_at, const std::string& size)
+                :  Type{type}, Name{name}, Path{path}, ModifiedAt{modified_at}, Size{size}  {}
         };
     private:
         std::vector<Item> items_;
+        std::string path_;
     public:
         DirectoryListingCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log = true);
 

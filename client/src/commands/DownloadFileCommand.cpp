@@ -45,10 +45,10 @@ namespace Commands {
         // Otherwise the response is the amount of bytes the file is long
         // so we know how much we need to read
         else {
-            auto bytes = stoi(resp);
+            auto bytes { stoi(resp) };
 
             // read from server
-            char* buffer = new char[bytes];
+            char* buffer { new char[bytes] };
             server_.read(buffer, bytes);
 
             // create file

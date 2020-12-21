@@ -20,7 +20,7 @@ namespace Commands {
             if (doLogResponse_) Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file or directory.");
             return true;
         } else {
-            auto path = std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]);
+            auto path { std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]) };
 
             if (fs::exists(path)) {
                 fs::remove_all(path);

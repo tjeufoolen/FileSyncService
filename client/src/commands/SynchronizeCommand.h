@@ -12,6 +12,7 @@
 namespace Commands {
     class SynchronizeCommand : public Command
     {
+        static const int MODIFICATION_THRESHOLD_SECONDS { 5 };
     public:
         SynchronizeCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
         bool Execute() override;

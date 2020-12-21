@@ -5,7 +5,7 @@
 namespace Utils {
     std::unique_ptr<std::vector<std::string>> StringSplitter::Split(const std::string &str, char delimiter)
     {
-        std::unique_ptr<std::vector<std::string>> out = std::make_unique<std::vector<std::string>>();
+        std::unique_ptr<std::vector<std::string>> out { std::make_unique<std::vector<std::string>>() };
         std::stringstream ss(str);
         std::string s;
 

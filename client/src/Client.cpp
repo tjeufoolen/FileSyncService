@@ -50,7 +50,7 @@ void Client::run()
             getline(std::cin, req);
 
             // handle request
-            std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
+            std::unique_ptr<std::vector<std::string>> args { std::move(Utils::StringSplitter::Split(req, ' ')) };
             keepRunning = handleCommand(req, *args);
         }
     }
@@ -65,7 +65,7 @@ bool Client::handleCommand(const std::string &request, const std::vector<std::st
     }
 
     // execute specified command
-    std::string cmd = args[0];
+    std::string cmd { args[0] };
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
     if (cmd == "quit") {

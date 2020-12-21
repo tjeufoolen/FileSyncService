@@ -39,6 +39,9 @@ namespace Commands {
 
                     file.close();
                     delete[] buffer;
+
+                    // 3. Update local last_write_time
+                    fs::last_write_time(path, fs::file_time_type{});
                 }
                 else {
                     client_ << "Error: no such file" << Utils::Logger::CRLF;
