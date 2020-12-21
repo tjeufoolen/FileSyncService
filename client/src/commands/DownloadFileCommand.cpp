@@ -9,8 +9,8 @@
 
 namespace Commands {
     DownloadFileCommand::DownloadFileCommand(asio::ip::tcp::iostream &server, const std::string &request,
-                                             const std::vector<std::string> &args)
-         :  Command(server, request, args)
+                                             const std::vector<std::string> &args, bool log)
+         :  Command(server, request, args, log)
     {
 
     }
@@ -18,7 +18,7 @@ namespace Commands {
     bool DownloadFileCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file.");
+            if (doLogResponse_) Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file.");
             return true;
         } else {
             if (!path_.empty()) path_.clear();
@@ -39,7 +39,7 @@ namespace Commands {
 
         // If the response is an error, print it
         if (resp.rfind("Error: ", 0) == 0) {
-            Utils::Logger::inform(resp);
+            if (doLogResponse_) Utils::Logger::inform(resp);
         }
 
         // Otherwise the response is the amount of bytes the file is long

@@ -9,8 +9,8 @@
 
 namespace Commands {
     UploadFileCommand::UploadFileCommand(asio::ip::tcp::iostream &server, const std::string &request,
-                                         const std::vector<std::string> &args)
-         :  Command(server, request, args)
+                                         const std::vector<std::string> &args, bool log)
+         :  Command(server, request, args, log)
     {
 
     }
@@ -18,7 +18,7 @@ namespace Commands {
     bool UploadFileCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            Utils::Logger::error("Too less arguments specified.\nPlease specify the path to the local file.");
+            if (doLogResponse_) Utils::Logger::error("Too less arguments specified.\nPlease specify the path to the local file.");
             return true;
         }
         else {
@@ -45,7 +45,7 @@ namespace Commands {
                 Command::HandleResponse();
                 return true;
             } else {
-                Utils::Logger::error("Error: no such file");
+                if (doLogResponse_) Utils::Logger::error("Error: no such file");
                 return true;
             }
         }

@@ -8,7 +8,7 @@ namespace Commands {
     {
         std::string path_;
     public:
-        DownloadFileCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+        DownloadFileCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log=true);
 
         bool Execute() override;
         void HandleResponse() override;

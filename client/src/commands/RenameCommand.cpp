@@ -8,8 +8,8 @@
 
 namespace Commands {
     RenameCommand::RenameCommand(asio::ip::tcp::iostream &server, const std::string &request,
-                                 const std::vector<std::string> &args)
-        :   Command(server, request, args)
+                                 const std::vector<std::string> &args, bool log)
+        :   Command(server, request, args, log)
     {
 
     }
@@ -17,7 +17,7 @@ namespace Commands {
     bool RenameCommand::Execute()
     {
         if (commandArgs_.size() < 2) {
-            Utils::Logger::error("Too less arguments specified.\nPlease specify the path to a file or directory and the new name.");
+            if (doLogResponse_) Utils::Logger::error("Too less arguments specified.\nPlease specify the path to a file or directory and the new name.");
             return true;
         }
         else {
@@ -27,15 +27,11 @@ namespace Commands {
 
             if (fs::exists(path)) {
                 fs::rename(path, newPath);
-
-                server_ << request_ << Utils::Logger::CRLF;
-                Command::HandleResponse();
-
-                return true;
-            } else {
-                Utils::Logger::error("Error: no such file or directory");
-                return true;
             }
+
+            server_ << request_ << Utils::Logger::CRLF;
+            Command::HandleResponse();
+            return true;
         }
     }
 }

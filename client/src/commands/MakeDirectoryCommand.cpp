@@ -7,8 +7,8 @@
 #define fs std::filesystem
 
 namespace Commands {
-    MakeDirectoryCommand::MakeDirectoryCommand(asio::ip::tcp::iostream &server, const std::string& request, const std::vector<std::string> &args)
-        :   Command(server, request, args)
+    MakeDirectoryCommand::MakeDirectoryCommand(asio::ip::tcp::iostream &server, const std::string& request, const std::vector<std::string> &args, bool log)
+        :   Command(server, request, args, log)
     {
 
     }
@@ -16,7 +16,7 @@ namespace Commands {
     bool MakeDirectoryCommand::Execute()
     {
         if (commandArgs_.size() < 2) {
-            Utils::Logger::error("Too less arguments specified.\nPlease specify a parent directory and a name.");
+            if (doLogResponse_) Utils::Logger::error("Too less arguments specified.\nPlease specify a parent directory and a name.");
             return true;
         }
         else {
@@ -31,7 +31,7 @@ namespace Commands {
 
                 return true;
             } else {
-                Utils::Logger::error("Error: no such directory");
+                if (doLogResponse_) Utils::Logger::error("Error: no such directory");
                 return true;
             }
         }

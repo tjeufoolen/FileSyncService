@@ -9,7 +9,7 @@ namespace Commands {
     class Command : public ICommand
     {
     public:
-        Command(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+        Command(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log=true);
 
         virtual bool Execute() = 0;
         virtual void HandleResponse();
@@ -19,6 +19,8 @@ namespace Commands {
         std::string response_;
         std::vector<std::string> args_;
         std::vector<std::string> commandArgs_;
+
+        bool doLogResponse_{};
     };
 }
 
