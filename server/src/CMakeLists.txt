@@ -11,6 +11,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/commands/RenameCommand.h"
     "${CMAKE_CURRENT_LIST_DIR}/commands/DirectoryListingCommand.h"
     "${CMAKE_CURRENT_LIST_DIR}/commands/DownloadFileCommand.h"
+    "${CMAKE_CURRENT_LIST_DIR}/commands/UploadFileCommand.h"
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -24,6 +25,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/commands/RenameCommand.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/commands/DirectoryListingCommand.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/commands/DownloadFileCommand.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/commands/UploadFileCommand.cpp"
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

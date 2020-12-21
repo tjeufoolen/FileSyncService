@@ -18,7 +18,7 @@ namespace Commands {
     {
         if (!commandArgs_.empty())
         {
-            auto path = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
+            std::string path = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
 
             if ((fs::status(path).permissions() & fs::perms::others_write) != fs::perms::none &&
                 (fs::status(path).permissions() & fs::perms::others_exec)  != fs::perms::none)

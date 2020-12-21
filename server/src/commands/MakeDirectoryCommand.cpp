@@ -18,8 +18,8 @@ namespace Commands {
     {
         if (commandArgs_.size() >= 2)
         {
-            auto parentDir = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
-            auto& name = commandArgs_[1];
+            std::string parentDir = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
+            std::string& name = commandArgs_[1];
 
             if ((fs::status(parentDir).permissions() & fs::perms::others_write) != fs::perms::none &&
                 (fs::status(parentDir).permissions() & fs::perms::others_exec)  != fs::perms::none)

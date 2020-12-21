@@ -17,8 +17,8 @@ namespace Commands {
     {
         if (commandArgs_.size() >= 2)
         {
-            auto path = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
-            auto newName = commandArgs_[1];
+            std::string path = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
+            std::string& newName = commandArgs_[1];
             auto newPath = fs::path(std::string(path)).parent_path().generic_string().append("/").append(commandArgs_[1]);
 
             if ((fs::status(path).permissions() & fs::perms::others_write) != fs::perms::none &&

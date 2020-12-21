@@ -12,6 +12,7 @@
 #include "DirectoryListingCommand.h"
 #include "QuitCommand.h"
 #include "DownloadFileCommand.h"
+#include "UploadFileCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -86,6 +87,9 @@ bool Client::handleCommand(const std::string &request, const std::vector<std::st
     }
     else if (cmd == "get") {
         return Commands::DownloadFileCommand{*server_, request, args}.Execute();
+    }
+    else if (cmd == "put") {
+        return Commands::UploadFileCommand{*server_, request, args}.Execute();
     }
 
     // If we got here, it means that the command entered is not defined.

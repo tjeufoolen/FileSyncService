@@ -19,7 +19,7 @@ namespace Commands {
     {
         if (!commandArgs_.empty())
         {
-            auto path = std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]);
+            std::string path { std::string(Server::BASE_DIRECTORY).append(commandArgs_[0]) };
 
             if ((fs::status(path).permissions() & fs::perms::others_read) != fs::perms::none &&
                 (fs::status(path).permissions() & fs::perms::others_exec)  != fs::perms::none)
@@ -27,7 +27,7 @@ namespace Commands {
                 if (fs::exists(path) && fs::is_directory(path))
                 {
                     // Send the amount of items the directory contains
-                    unsigned int count = std::distance(fs::directory_iterator(path), fs::directory_iterator{});
+                    auto count { std::distance(fs::directory_iterator(path), fs::directory_iterator{}) };
                     client_ << count << Utils::Logger::CRLF;
 
                     // Send the items (one at a time)
