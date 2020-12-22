@@ -48,18 +48,18 @@ namespace Commands {
             auto bytes { stoi(resp) };
 
             // read from server
-            char* buffer { new char[bytes] };
-            server_.read(buffer, bytes);
+            std::unique_ptr<char> buffer { std::make_unique<char>(bytes) };
+
+            server_.read(buffer.get(), bytes);
 
             // create file
             std::ofstream file{ path_, std::ios::out | std::ios::binary };
 
             // write to file
-            file.write(buffer, bytes);
+            file.write(buffer.get(), bytes);
 
             // cleanup
             file.close();
-            delete[] buffer;
         }
     }
 }

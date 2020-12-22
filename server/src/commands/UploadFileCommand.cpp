@@ -27,18 +27,17 @@ namespace Commands {
                 if (fs::space(fs::path(path).remove_filename().generic_string()).available >= bytes)
                 {
                     // read from server
-                    char* buffer = new char[bytes];
-                    client_.read(buffer, bytes);
+                    std::unique_ptr<char> buffer { std::make_unique<char>(bytes) };
+                    client_.read(buffer.get(), bytes);
 
                     // create file
                     std::ofstream file{ path, std::ios::out | std::ios::binary };
 
                     // write to file
-                    file.write(buffer, bytes);
+                    file.write(buffer.get(), bytes);
 
                     // cleanup
                     file.close();
-                    delete[] buffer;
 
                     client_ << "OK" << Utils::Logger::CRLF;
                 }
