@@ -17,7 +17,8 @@ namespace Commands {
     bool DeleteCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            if (doLogResponse_) Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file or directory.");
+            if (doLogResponse_)
+                Utils::Logger::Inform("Too less arguments specified.\nPlease specify the path to a file or directory.");
             return true;
         } else {
             auto path { std::string(Client::BASE_DIRECTORY).append(commandArgs_[0]) };

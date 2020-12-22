@@ -16,10 +16,10 @@ public:
 public:
     Server(int port);
 
-    void start();
+    void Start();
 
-    [[noreturn]] void run();
-    void handleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args);
+    [[noreturn]] void Run();
+    void HandleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args);
 };
 
 #endif //CPPLS2_SERVER_SERVER_H

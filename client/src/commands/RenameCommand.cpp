@@ -17,7 +17,9 @@ namespace Commands {
     bool RenameCommand::Execute()
     {
         if (commandArgs_.size() < 2) {
-            if (doLogResponse_) Utils::Logger::error("Too less arguments specified.\nPlease specify the path to a file or directory and the new name.");
+            if (doLogResponse_)
+                Utils::Logger::Error(
+                        "Too less arguments specified.\nPlease specify the path to a file or directory and the new name.");
             return true;
         }
         else {

@@ -18,7 +18,8 @@ namespace Commands {
     bool DownloadFileCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            if (doLogResponse_) Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a file.");
+            if (doLogResponse_)
+                Utils::Logger::Inform("Too less arguments specified.\nPlease specify the path to a file.");
             return true;
         } else {
             if (!path_.empty()) path_.clear();
@@ -39,7 +40,7 @@ namespace Commands {
 
         // If the response is an error, print it
         if (resp.rfind("Error: ", 0) == 0) {
-            if (doLogResponse_) Utils::Logger::inform(resp);
+            if (doLogResponse_) Utils::Logger::Inform(resp);
         }
 
         // Otherwise the response is the amount of bytes the file is long

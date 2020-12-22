@@ -19,7 +19,8 @@ namespace Commands {
     bool DirectoryListingCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            if (doLogResponse_) Utils::Logger::inform("Too less arguments specified.\nPlease specify the path to a directory.");
+            if (doLogResponse_)
+                Utils::Logger::Inform("Too less arguments specified.\nPlease specify the path to a directory.");
             return true;
         } else {
             path_ = commandArgs_[0];
@@ -30,7 +31,7 @@ namespace Commands {
                 DirectoryListingCommand::HandleResponse();
                 return true;
             } else {
-                if (doLogResponse_) Utils::Logger::error("Error: no such directory");
+                if (doLogResponse_) Utils::Logger::Error("Error: no such directory");
                 return true;
             }
         }
@@ -54,13 +55,13 @@ namespace Commands {
                 getline(server_, item);
                 item.erase(item.end() - 1); // remove '\r'
 
-                if (doLogResponse_) Utils::Logger::inform(item);
+                if (doLogResponse_) Utils::Logger::Inform(item);
                 SaveItemOutputHistory(item);
 
                 totalItems--;
             }
         } catch(const std::invalid_argument&) {
-            if (doLogResponse_) Utils::Logger::error(resp);
+            if (doLogResponse_) Utils::Logger::Error(resp);
         }
     }
 
