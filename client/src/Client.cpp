@@ -13,6 +13,8 @@
 #include "QuitCommand.h"
 #include "DownloadFileCommand.h"
 #include "UploadFileCommand.h"
+#include "SynchronizeCommand.h"
+#include "HelpCommand.h"
 
 const std::string Client::BASE_DIRECTORY = {std::filesystem::current_path().generic_string().append("/dropbox/")};
 
@@ -27,6 +29,11 @@ void Client::connect()
 {
     server_ = std::make_unique<asio::ip::tcp::iostream>(HOSTNAME, PORT);
     if (!*server_) throw std::runtime_error("could not connect to server");
+
+    // Handle dropbox root folder does not exist
+    if (!std::filesystem::exists(BASE_DIRECTORY)) {
+        std::filesystem::create_directory(BASE_DIRECTORY);
+    }
 }
 
 void Client::run()
@@ -49,7 +56,7 @@ void Client::run()
             getline(std::cin, req);
 
             // handle request
-            std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(req, ' '));
+            std::unique_ptr<std::vector<std::string>> args { std::move(Utils::StringSplitter::Split(req, ' ')) };
             keepRunning = handleCommand(req, *args);
         }
     }
@@ -64,7 +71,7 @@ bool Client::handleCommand(const std::string &request, const std::vector<std::st
     }
 
     // execute specified command
-    std::string cmd = args[0];
+    std::string cmd { args[0] };
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
     if (cmd == "quit") {
@@ -90,6 +97,12 @@ bool Client::handleCommand(const std::string &request, const std::vector<std::st
     }
     else if (cmd == "put") {
         return Commands::UploadFileCommand{*server_, request, args}.Execute();
+    }
+    else if (cmd == "sync") {
+        return Commands::SynchronizeCommand{*server_, request, args}.Execute();
+    }
+    else if (cmd == "help") {
+        return Commands::HelpCommand{*server_, request, args}.Execute();
     }
 
     // If we got here, it means that the command entered is not defined.

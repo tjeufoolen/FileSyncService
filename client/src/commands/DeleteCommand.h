@@ -4,9 +4,10 @@
 #include "Command.h"
 
 namespace Commands {
-    class DeleteCommand : public Command {
+    class DeleteCommand : public Command
+    {
     public:
-        DeleteCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+        DeleteCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log=true);
 
         bool Execute() override;
     };

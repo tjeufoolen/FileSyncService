@@ -7,7 +7,7 @@ namespace Commands {
     class RenameCommand : public Command
     {
     public:
-        RenameCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+        RenameCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log=true);
         bool Execute() override;
     };
 }

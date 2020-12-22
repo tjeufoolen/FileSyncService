@@ -2,8 +2,8 @@
 
 namespace Commands {
     QuitCommand::QuitCommand(asio::ip::tcp::iostream &server, const std::string &request,
-                             const std::vector<std::string> &args)
-         :  Command(server, request, args)
+                             const std::vector<std::string> &args, bool log)
+         :  Command(server, request, args, log)
      {
 
      }
