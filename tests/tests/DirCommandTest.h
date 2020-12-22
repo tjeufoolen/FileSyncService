@@ -10,6 +10,7 @@ namespace Tests {
         DirCommandTest(asio::ip::tcp::iostream& server);
         void RunTests() override;
     private:
+        void TestSuccessful();
         void TestDirectoryDoesNotExist();
     };
 }

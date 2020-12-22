@@ -30,6 +30,9 @@ int main()
     Tests::DirCommandTest{*server_}.RunTests();
     Tests::GetCommandTest{*server_}.RunTests();
     Tests::PutCommandTest{*server_}.RunTests();
+    Tests::RenCommandTest{*server_}.RunTests();
+    Tests::DelCommandTest{*server_}.RunTests();
+    Tests::MkdirCommandTest{*server_}.RunTests();
 
     Disconnect();
 }

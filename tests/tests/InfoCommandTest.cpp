@@ -1,5 +1,7 @@
 #include "InfoCommandTest.h"
 
+#include <iostream>
+
 namespace Tests {
     InfoCommandTest::InfoCommandTest(asio::ip::tcp::iostream& server)
         :   Test{server, "InfoCommandTest"} {}
@@ -12,7 +14,7 @@ namespace Tests {
     void InfoCommandTest::TestResultEqual()
     {
         // arrange
-        std::string expected { "Dropbox server 1.0, copyright (c) 2021 Tjeu Foolen." };
+        std::string expected { std::string("Dropbox server 1.0, copyright (c) 2021 Tjeu Foolen.") };
         std::string cmd { "info" };
 
         // act
@@ -20,6 +22,6 @@ namespace Tests {
         std::string actual { GetLine() };
 
         // assert
-        AssertEqual(expected.compare(actual), "TestResultEqual");
+        AssertEqual(expected == actual, "TestResultEqual");
     }
 }

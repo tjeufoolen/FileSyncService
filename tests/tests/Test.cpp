@@ -10,6 +10,7 @@ namespace Tests {
     {
         std::string str;
         getline(server_, str);
+        str.erase(str.end() - 1); // remove '\r'
         return str;
     }
 

@@ -20,6 +20,6 @@ namespace Tests {
         std::string actual { GetLine() };
 
         // assert
-        AssertEqual(expected.compare(actual), "TestFileDoesNotExist");
+        AssertEqual(expected == actual, "TestFileDoesNotExist");
     }
 }

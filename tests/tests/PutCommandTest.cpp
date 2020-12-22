@@ -34,7 +34,7 @@ namespace Tests {
         std::string actual { GetLine() };
 
         // assert
-        AssertEqual(expected.compare(actual), "TestSuccessful");
+        AssertEqual(expected == actual, "TestSuccessful");
     }
 
     void PutCommandTest::TestInvalidPath()
@@ -48,7 +48,7 @@ namespace Tests {
         std::string actual { GetLine() };
 
         // assert
-        AssertEqual(expected.compare(actual), "TestInvalidPath");
+        AssertEqual(expected == actual, "TestInvalidPath");
     }
 
     void PutCommandTest::TestNotEnoughDiskSpace()
@@ -62,6 +62,6 @@ namespace Tests {
         std::string actual { GetLine() };
 
         // assert
-        AssertEqual(expected.compare(actual), "TestNotEnoughDiskSpace");
+        AssertEqual(expected == actual, "TestNotEnoughDiskSpace");
     }
 }
