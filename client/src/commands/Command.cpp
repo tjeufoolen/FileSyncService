@@ -21,6 +21,6 @@ namespace Commands {
         getline(server_, response_);
         response_.erase(response_.end() - 1); // remove '\r'
 
-        if (doLogResponse_) Utils::Logger::inform(response_);
+        if (doLogResponse_) Utils::Logger::Inform(response_);
     }
 }

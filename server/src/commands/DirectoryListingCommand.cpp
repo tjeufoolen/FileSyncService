@@ -35,7 +35,8 @@ namespace Commands {
                     {
                         const char type = entry.is_symlink() ? '*' : entry.is_directory() ? 'D' : entry.is_regular_file() ? 'F' : '*';
                         const std::string name = entry.path().filename().string();
-                        const std::string modified_at = Utils::TimestampConverter::convertFileTimestamp(entry.last_write_time());
+                        const std::string modified_at = Utils::TimestampConverter::ConvertFileTimestamp(
+                                entry.last_write_time());
                         const std::string size = entry.is_regular_file() ? std::to_string(entry.file_size()) : "0";
 
                         client_ << type << "|" << name << "|" << modified_at << "|" << size << Utils::Logger::CRLF;

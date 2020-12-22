@@ -19,7 +19,7 @@
 int main() {
     try {
         std::unique_ptr<Client> c = std::make_unique<Client>("localhost", "12345");
-        c->run();
+        c->Run();
     }
     catch (const std::exception& ex) {
         std::cerr << "client: " << ex.what() << Utils::Logger::CRLF;

@@ -11,9 +11,9 @@ namespace Utils {
     class TimestampConverter
     {
     public:
-        static std::string convertFileTimestamp(const std::filesystem::file_time_type& timestamp)
+        static std::string ConvertFileTimestamp(const std::filesystem::file_time_type& timestamp)
         {
-            std::time_t tt = fileTimeTypeToTimeT(timestamp);
+            std::time_t tt = FileTimeTypeToTimeT(timestamp);
             struct tm * dt;
             char buffer [30];
             dt = localtime(&tt);
@@ -22,7 +22,7 @@ namespace Utils {
         }
 
     private:
-        static std::time_t fileTimeTypeToTimeT(const std::filesystem::file_time_type& tp)
+        static std::time_t FileTimeTypeToTimeT(const std::filesystem::file_time_type& tp)
         {
             using namespace std::chrono;
             auto sctp = time_point_cast<system_clock::duration>(tp - std::filesystem::file_time_type::clock::now()

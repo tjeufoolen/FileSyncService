@@ -16,7 +16,8 @@ namespace Commands {
     bool MakeDirectoryCommand::Execute()
     {
         if (commandArgs_.size() < 2) {
-            if (doLogResponse_) Utils::Logger::error("Too less arguments specified.\nPlease specify a parent directory and a name.");
+            if (doLogResponse_)
+                Utils::Logger::Error("Too less arguments specified.\nPlease specify a parent directory and a name.");
             return true;
         }
         else {
@@ -31,7 +32,7 @@ namespace Commands {
 
                 return true;
             } else {
-                if (doLogResponse_) Utils::Logger::error("Error: no such directory");
+                if (doLogResponse_) Utils::Logger::Error("Error: no such directory");
                 return true;
             }
         }

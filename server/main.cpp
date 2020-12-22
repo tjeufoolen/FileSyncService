@@ -18,7 +18,7 @@
 int main() {
     try {
         std::unique_ptr<Server> s = std::make_unique<Server>(12345);
-        s->run();
+        s->Run();
     }
     catch (const std::exception& ex) {
         std::cerr << "server: " << ex.what() << '\n';

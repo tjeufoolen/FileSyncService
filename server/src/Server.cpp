@@ -18,10 +18,10 @@ const std::string Server::BASE_DIRECTORY = {std::filesystem::current_path().gene
 Server::Server(int port)
     :   PORT{port}
 {
-    start();
+    Start();
 }
 
-void Server::start()
+void Server::Start()
 {
     server_ = std::make_unique<asio::ip::tcp::acceptor>(io_context_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), PORT));
 
@@ -31,11 +31,11 @@ void Server::start()
             std::filesystem::create_directory(BASE_DIRECTORY);
         }
 
-        run();
+        Run();
     }
 }
 
-[[noreturn]] void Server::run()
+[[noreturn]] void Server::Run()
 {
     for (;;)
     {
@@ -57,7 +57,7 @@ void Server::start()
 
             if (request != "quit") {
                 std::unique_ptr<std::vector<std::string>> args = std::move(Utils::StringSplitter::Split(request, ' '));
-                handleRequest(client, *args);
+                HandleRequest(client, *args);
             } else {
                 keepListening = false;
             }
@@ -65,7 +65,7 @@ void Server::start()
     }
 }
 
-void Server::handleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args)
+void Server::HandleRequest(asio::ip::tcp::iostream& client, const std::vector<std::string>& args)
 {
     if (args.empty()) return;
 

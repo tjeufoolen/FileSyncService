@@ -7,12 +7,12 @@ namespace Utils {
     const std::string Logger::CRLF = { "\r\n" };
     const std::string Logger::PREFIX = { "dropbox>" };
 
-    void Logger::inform(const std::string &message)
+    void Logger::Inform(const std::string &message)
     {
         std::cout << message << CRLF;
     }
 
-    void Logger::error(const std::string &message)
+    void Logger::Error(const std::string &message)
     {
         std::cout << message << CRLF;
     }

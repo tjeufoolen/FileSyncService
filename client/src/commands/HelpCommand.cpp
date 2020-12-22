@@ -11,10 +11,10 @@ namespace Commands {
     bool HelpCommand::Execute()
     {
         if (doLogResponse_) {
-            Utils::Logger::inform(
+            Utils::Logger::Inform(
                     "--------------------------------------------------------------------------------\n"
                     "COMMAND\t\t\t\t| DESCRIPTION\n"
-                            "--------------------------------------------------------------------------------\n"
+                    "--------------------------------------------------------------------------------\n"
                     "help\t\t\t\t- shows this information\n"
                     "info\t\t\t\t- shows server information\n"
                     "dir <path>\t\t\t- shows the contents of specified directory\n"
