@@ -65,9 +65,9 @@ namespace Commands {
                     if (it != serverItems.end()) {
                         auto &server{it};
 
-                        auto l_modification_timestamp = Utils::TimestampConverter::convertStringToTimeT(
-                                Utils::TimestampConverter::convertFileTimestamp(local.last_write_time()));
-                        auto s_modification_timestamp = Utils::TimestampConverter::convertStringToTimeT(
+                        auto l_modification_timestamp = Utils::TimestampConverter::ConvertStringToTimeT(
+                                Utils::TimestampConverter::ConvertFileTimestamp(local.last_write_time()));
+                        auto s_modification_timestamp = Utils::TimestampConverter::ConvertStringToTimeT(
                                 server->ModifiedAt);
 
                         double differenceInSeconds = difftime(s_modification_timestamp, l_modification_timestamp);
@@ -141,7 +141,7 @@ namespace Commands {
         std::string request{std::string(prefix).append(" ").append(parentDir).append(" ").append(name)};
         std::vector<std::string> args{prefix, parentDir, name};
 
-        Utils::Logger::inform(std::string("Creating directory '").append(name).append("' on server..."));
+        Utils::Logger::Inform(std::string("Creating directory '").append(name).append("' on server..."));
         changes_++;
 
         auto command{MakeDirectoryCommand{server_, request, args, false}};
@@ -150,7 +150,7 @@ namespace Commands {
 
     void SynchronizeCommand::CreateLocalDirectory(const std::string &path)
     {
-        Utils::Logger::inform(std::string("Creating directory '").append(path).append("' local..."));
+        Utils::Logger::Inform(std::string("Creating directory '").append(path).append("' local..."));
         changes_++;
 
         fs::create_directory(path);
@@ -162,7 +162,7 @@ namespace Commands {
         std::string request{std::string(prefix).append(" ").append(remotePath)};
         std::vector<std::string> args{prefix, remotePath};
 
-        Utils::Logger::inform(std::string("Downloading ").append(remotePath).append(" from server..."));
+        Utils::Logger::Inform(std::string("Downloading ").append(remotePath).append(" from server..."));
         changes_++;
 
         auto command{DownloadFileCommand{server_, request, args, false}};
@@ -175,7 +175,7 @@ namespace Commands {
         std::string request{std::string(prefix).append(" ").append(localPath)};
         std::vector<std::string> args{prefix, localPath};
 
-        Utils::Logger::inform(std::string("Uploading ").append(localPath).append(" to server..."));
+        Utils::Logger::Inform(std::string("Uploading ").append(localPath).append(" to server..."));
         changes_++;
 
         auto command{UploadFileCommand{server_, request, args, false}};

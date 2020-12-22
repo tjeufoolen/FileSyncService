@@ -18,7 +18,8 @@ namespace Commands {
     bool UploadFileCommand::Execute()
     {
         if (commandArgs_.empty()) {
-            if (doLogResponse_) Utils::Logger::error("Too less arguments specified.\nPlease specify the path to the local file.");
+            if (doLogResponse_)
+                Utils::Logger::Error("Too less arguments specified.\nPlease specify the path to the local file.");
             return true;
         }
         else {
@@ -47,7 +48,7 @@ namespace Commands {
                 Command::HandleResponse();
                 return true;
             } else {
-                if (doLogResponse_) Utils::Logger::error("Error: no such file");
+                if (doLogResponse_) Utils::Logger::Error("Error: no such file");
                 return true;
             }
         }

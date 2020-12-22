@@ -16,11 +16,11 @@ public:
 public:
     Client(const std::string& hostname, const std::string& port);
 
-    void connect();
-    void run();
+    void Connect();
+    void Run();
 
     // boolean return type indicates if we should stop running or not.
-    bool handleCommand(const std::string& request, const std::vector<std::string>& args);
+    bool HandleCommand(const std::string& request, const std::vector<std::string>& args);
 };
 
 #endif //CPPLS2_CLIENT_CLIENT_H

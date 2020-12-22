@@ -22,13 +22,13 @@ Client::Client(const std::string& hostname, const std::string& port)
     : HOSTNAME{hostname},
       PORT{port}
 {
-    connect();
+    Connect();
 }
 
-void Client::connect()
+void Client::Connect()
 {
     server_ = std::make_unique<asio::ip::tcp::iostream>(HOSTNAME, PORT);
-    if (!*server_) throw std::runtime_error("could not connect to server");
+    if (!*server_) throw std::runtime_error("could not Connect to server");
 
     // Handle dropbox root folder does not exist
     if (!std::filesystem::exists(BASE_DIRECTORY)) {
@@ -36,14 +36,14 @@ void Client::connect()
     }
 }
 
-void Client::run()
+void Client::Run()
 {
     if (*server_) {
         // Retrieve welcome message
         std::string message;
         getline(*server_, message);
         message.erase(message.end() - 1); // remove '\r'
-        Utils::Logger::inform(message);
+        Utils::Logger::Inform(message);
 
         // Keep handling requests until specified not to
         bool keepRunning{true};
@@ -57,16 +57,16 @@ void Client::run()
 
             // handle request
             std::unique_ptr<std::vector<std::string>> args { std::move(Utils::StringSplitter::Split(req, ' ')) };
-            keepRunning = handleCommand(req, *args);
+            keepRunning = HandleCommand(req, *args);
         }
     }
 }
 
-bool Client::handleCommand(const std::string &request, const std::vector<std::string> &args)
+bool Client::HandleCommand(const std::string &request, const std::vector<std::string> &args)
 {
     // handle no arguments provided
     if (args.empty()) {
-        Utils::Logger::inform("Please specify a valid command.");
+        Utils::Logger::Inform("Please specify a valid command.");
         return true;
     }
 
@@ -106,6 +106,6 @@ bool Client::handleCommand(const std::string &request, const std::vector<std::st
     }
 
     // If we got here, it means that the command entered is not defined.
-    Utils::Logger::inform("The command you entered does not exist.");
+    Utils::Logger::Inform("The command you entered does not exist.");
     return true;
 }
