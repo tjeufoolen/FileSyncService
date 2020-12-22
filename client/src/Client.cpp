@@ -29,6 +29,11 @@ void Client::connect()
 {
     server_ = std::make_unique<asio::ip::tcp::iostream>(HOSTNAME, PORT);
     if (!*server_) throw std::runtime_error("could not connect to server");
+
+    // Handle dropbox root folder does not exist
+    if (!std::filesystem::exists(BASE_DIRECTORY)) {
+        std::filesystem::create_directory(BASE_DIRECTORY);
+    }
 }
 
 void Client::run()

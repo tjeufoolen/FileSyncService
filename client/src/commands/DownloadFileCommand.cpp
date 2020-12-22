@@ -48,7 +48,7 @@ namespace Commands {
             auto bytes { stoi(resp) };
 
             // read from server
-            std::unique_ptr<char> buffer { std::make_unique<char>(bytes) };
+            std::unique_ptr<char[]> buffer { std::make_unique<char[]>(bytes) };
 
             server_.read(buffer.get(), bytes);
 

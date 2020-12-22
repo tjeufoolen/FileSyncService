@@ -33,7 +33,7 @@ namespace Commands {
                 // 2. send actual file contents
                 std::ifstream file{ path, std::ios::in | std::ios::binary };
 
-                std::unique_ptr<char> buffer { std::make_unique<char>(bytes) };
+                std::unique_ptr<char[]> buffer { std::make_unique<char[]>(bytes) };
                 file.read(buffer.get(), bytes);
 
                 server_.write(buffer.get(), bytes);
@@ -41,7 +41,7 @@ namespace Commands {
                 file.close();
 
                 // 3. Update local last_write_time
-                fs::last_write_time(path, fs::file_time_type{});
+//                fs::last_write_time(path, fs::file_time_type{});
 
                 // 4. handle response
                 Command::HandleResponse();

@@ -27,7 +27,7 @@ namespace Commands {
                 if (fs::space(fs::path(path).remove_filename().generic_string()).available >= bytes)
                 {
                     // read from server
-                    std::unique_ptr<char> buffer { std::make_unique<char>(bytes) };
+                    std::unique_ptr<char[]> buffer { std::make_unique<char[]>(bytes) };
                     client_.read(buffer.get(), bytes);
 
                     // create file
