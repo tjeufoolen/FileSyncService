@@ -7,7 +7,7 @@ namespace Commands {
     class MakeDirectoryCommand : public Command
     {
     public:
-        MakeDirectoryCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+        MakeDirectoryCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log=true);
 
         bool Execute() override;
     };

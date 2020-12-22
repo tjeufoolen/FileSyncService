@@ -2,6 +2,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/Client.h"
         "${CMAKE_CURRENT_LIST_DIR}/utils/StringSplitter.h"
         "${CMAKE_CURRENT_LIST_DIR}/utils/Logger.h"
+        "${CMAKE_CURRENT_LIST_DIR}/utils/TimestampConverter.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/ICommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/Command.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/MakeDirectoryCommand.h"
@@ -12,6 +13,8 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/commands/QuitCommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/DownloadFileCommand.h"
         "${CMAKE_CURRENT_LIST_DIR}/commands/UploadFileCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/SynchronizeCommand.h"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/HelpCommand.h"
         )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -27,6 +30,8 @@ target_sources(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/commands/QuitCommand.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/commands/DownloadFileCommand.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/commands/UploadFileCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/SynchronizeCommand.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/commands/HelpCommand.cpp"
         )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

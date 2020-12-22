@@ -26,6 +26,11 @@ void Server::start()
     server_ = std::make_unique<asio::ip::tcp::acceptor>(io_context_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), PORT));
 
     if (server_) {
+        // Handle dropbox root folder does not exist
+        if (!std::filesystem::exists(BASE_DIRECTORY)) {
+            std::filesystem::create_directory(BASE_DIRECTORY);
+        }
+
         run();
     }
 }

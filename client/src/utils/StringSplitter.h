@@ -1,5 +1,5 @@
-#ifndef CPPLS2_SERVER_STRINGSPLITTER_H
-#define CPPLS2_SERVER_STRINGSPLITTER_H
+#ifndef CPPLS2_CLIENT_STRINGSPLITTER_H
+#define CPPLS2_CLIENT_STRINGSPLITTER_H
 
 #include <string>
 #include <vector>
@@ -12,4 +12,4 @@ namespace Utils {
     };
 }
 
-#endif //CPPLS2_SERVER_STRINGSPLITTER_H
+#endif //CPPLS2_CLIENT_STRINGSPLITTER_H

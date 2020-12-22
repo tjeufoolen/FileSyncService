@@ -7,7 +7,7 @@ namespace Commands {
     class QuitCommand : public Command
     {
     public:
-        QuitCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args);
+        QuitCommand(asio::ip::tcp::iostream& server, const std::string& request, const std::vector<std::string>& args, bool log=true);
 
         bool Execute() override;
     };
