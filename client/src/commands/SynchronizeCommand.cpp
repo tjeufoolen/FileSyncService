@@ -14,154 +14,171 @@
 namespace Commands {
     SynchronizeCommand::SynchronizeCommand(asio::ip::tcp::iostream &server, const std::string &request,
                                            const std::vector<std::string> &args)
-       :    Command(server, request, args)
-   {
+            : Command(server, request, args) {
 
-   }
+    }
 
-   bool SynchronizeCommand::Execute()
-   {
-        // To synchronize both client and server directories, we need to loop through all local and server
-        // subdirectories recursively and check which subdirectories and files do not exist on either end.
-        // We also need to check if both timestamps are equal. If not, we should overwrite the file contents with the
-        // oldest modification date with the contents of the file with the newer modification date.
-        //
-        // If this is done correctly, both directories should have the same files and subdirectories.
+    bool SynchronizeCommand::Execute()
+    {
+        // keep synchronizing until everything is up-to-date
+        do {
+            changes_ = 0;
 
-       // ------------------------------------------------------------------------------------------------------------
-       // checklist:
-       // [x] local folder exists on server
-       // [ ] server folder exists local
-       // [x] local file exists on server
-       // [ ] server file exists local
-       // [x] if file modification timestamps differ, overwrite the oldest with the content of the newest
-       // ------------------------------------------------------------------------------------------------------------
+            // List of all files and subdirectories on the server
+            std::vector<DirectoryListingCommand::Item> serverItems{};
 
+            // Helper lambdas
+            auto getByName = [&](const std::string &name) -> auto {
+                return std::find_if(begin(serverItems), end(serverItems),
+                    [&](const DirectoryListingCommand::Item &item) {
+                        return item.Name == name;
+                });
+            };
 
-       // List of all files and subdirectories on the server
-       std::vector<DirectoryListingCommand::Item> serverItems{};
+            // Get root directory contents and add to serverItems list
+            auto rootItems{GetDirectoryContents("")};
+            serverItems.insert(serverItems.begin(), rootItems.begin(), rootItems.end());
 
-       // Helper lambdas
-       auto getByName = [&](const std::string &name) -> auto {
-           return std::find_if(begin(serverItems), end(serverItems), [&](const DirectoryListingCommand::Item &item) {
-               return item.Name == name;
-           });
-       };
+            // walk through all local files and subdirectories
+            for (auto &local : fs::recursive_directory_iterator(Client::BASE_DIRECTORY)) {
+                auto relativePath{fs::relative(local, Client::BASE_DIRECTORY).string()}; // private/example.txt
+                std::string name{local.path().filename().string()}; // example.txt
 
-       // Get root directory contents and add to serverItems list
-       auto rootItems { GetDirectoryContents("") };
-       serverItems.insert(serverItems.begin(), rootItems.begin(), rootItems.end());
+                // check if item is directory
+                if (fs::is_directory(local)) {
+                    auto vec{GetDirectoryContents(relativePath)};
+                    serverItems.insert(serverItems.begin(), vec.begin(), vec.end());
 
-       // walk through all local files and subdirectories
-       for(auto& local : fs::recursive_directory_iterator(Client::BASE_DIRECTORY))
-       {
-           auto relativePath { fs::relative(local, Client::BASE_DIRECTORY).string() }; // private/example.txt
-           std::string name { local.path().filename().string() }; // example.txt
+                    auto it{getByName(name)};
 
-           // check if item is directory
-           if (fs::is_directory(local)) {
-               auto vec { GetDirectoryContents(relativePath) };
-               serverItems.insert(serverItems.begin(), vec.begin(), vec.end());
+                    // when directory does not exist on server
+                    if (it == serverItems.end()) {
+                        CreateServerDirectory(fs::path(relativePath).remove_filename().string(), name);
+                    }
+                }
 
-               auto it { getByName(name) };
+                    // check if item is file
+                else if (fs::is_regular_file(local)) {
+                    auto it{getByName(name)};
 
-               // check if directory exists on server
-               if (it != serverItems.end()) {
+                    // check if file exists on server
+                    if (it != serverItems.end()) {
+                        auto &server{it};
 
-               }
+                        auto l_modification_timestamp = Utils::TimestampConverter::convertStringToTimeT(
+                                Utils::TimestampConverter::convertFileTimestamp(local.last_write_time()));
+                        auto s_modification_timestamp = Utils::TimestampConverter::convertStringToTimeT(
+                                server->ModifiedAt);
 
-               // when directory does not exist on server
-               else {
-                   MakeDirectory(fs::path(relativePath).remove_filename().string(), name);
-               }
-           }
+                        double differenceInSeconds = difftime(s_modification_timestamp, l_modification_timestamp);
 
-           // check if item is file
-           else if (fs::is_regular_file(local)) {
-               auto it { getByName(name) };
+                        // check if local item's modification date is newer then server
+                        if (differenceInSeconds < MODIFICATION_THRESHOLD_SECONDS * -1) {
+                            UploadFile(relativePath);   // overwrite server
+                        }
+                            // check if server's modification date is newer then local
+                        else if (differenceInSeconds > MODIFICATION_THRESHOLD_SECONDS) {
+                            DownloadFile(relativePath); // overwrite local
+                        }
+                    }
 
-               // check if file exists on server
-               if (it != serverItems.end()) {
-                   auto& server {it};
+                        // upload file to server
+                    else {
+                        UploadFile(relativePath);
+                    }
+                }
+            }
 
-                   auto l_modification_timestamp = Utils::TimestampConverter::convertStringToTimeT(
-                           Utils::TimestampConverter::convertFileTimestamp(local.last_write_time()));
-                   auto s_modification_timestamp = Utils::TimestampConverter::convertStringToTimeT(server->ModifiedAt);
+            // walk through all server files and subdirectories
+            for (auto &server : serverItems) {
+                std::string relativePath{std::string(server.Path).append("/").append(server.Name)};
+                std::string localPath{std::string(Client::BASE_DIRECTORY).append("/").append(relativePath)};
 
-                   double differenceInSeconds = difftime(s_modification_timestamp, l_modification_timestamp);
+                // when item is a directory
+                if (server.Type == DirectoryListingCommand::ItemType::DIRECTORY) {
+                    // check if directory exists local
+                    if (!fs::exists(localPath)) {
+                        // if it doesn't exist create it
+                        CreateLocalDirectory(localPath);
+                    }
+                }
 
-                   // check if local item's modification date is newer then server
-                   if (differenceInSeconds < MODIFICATION_THRESHOLD_SECONDS * -1) {
-                        UploadFile(relativePath);   // overwrite server
-                   }
-                   // check if server's modification date is newer then local
-                   else if (differenceInSeconds > MODIFICATION_THRESHOLD_SECONDS) {
-                        DownloadFile(relativePath); // overwrite local
-                   }
-               }
+                    // when item is a file
+                else if (server.Type == DirectoryListingCommand::ItemType::FILE) {
+                    // check if file exists local
+                    if (!fs::exists(localPath)) {
+                        // if it doesn't exist download it
+                        DownloadFile(relativePath);
+                    }
+                }
+            }
+        } while(changes_ != 0);
 
-               // upload file to server
-               else {
-                   UploadFile(relativePath);
-               }
-           }
-       }
-
-
-       return true;
-   }
+        return true;
+    }
 
     std::vector<DirectoryListingCommand::Item> SynchronizeCommand::GetDirectoryContents(const std::string &path)
-   {
-        std::string path_ { path };
+    {
+        std::string path_{path};
         if (path_.empty()) path_ = ".";
 
-        std::string prefix { "DIR" };
-        std::string request { std::string(prefix).append(" ").append(path_) };
-        std::vector<std::string> args {prefix, path_};
+        std::string prefix{"DIR"};
+        std::string request{std::string(prefix).append(" ").append(path_)};
+        std::vector<std::string> args{prefix, path_};
 
-        auto command { DirectoryListingCommand{server_, request, args, false} };
+        auto command{DirectoryListingCommand{server_, request, args, false}};
         command.Execute();
 
         return command.GetItems();
-   }
+    }
 
-   void SynchronizeCommand::MakeDirectory(const std::string &parent, const std::string &name)
-   {
-        std::string parentDir { parent };
+    void SynchronizeCommand::CreateServerDirectory(const std::string &parent, const std::string &name)
+    {
+        std::string parentDir{parent};
         if (parentDir.empty()) parentDir = ".";
 
-       std::string prefix { "MKDIR" };
-       std::string request { std::string(prefix).append(" ").append(parentDir).append(" ").append(name) };
-       std::vector<std::string> args {prefix, parentDir, name};
+        std::string prefix{"MKDIR"};
+        std::string request{std::string(prefix).append(" ").append(parentDir).append(" ").append(name)};
+        std::vector<std::string> args{prefix, parentDir, name};
 
-       Utils::Logger::inform(std::string("Creating directory '").append(name).append("' on server..."));
+        Utils::Logger::inform(std::string("Creating directory '").append(name).append("' on server..."));
+        changes_++;
 
-       auto command { MakeDirectoryCommand{server_, request, args, false} };
-       command.Execute();
-   }
+        auto command{MakeDirectoryCommand{server_, request, args, false}};
+        command.Execute();
+    }
 
-   void SynchronizeCommand::DownloadFile(const std::string &remotePath)
-   {
-       std::string prefix { "GET" };
-       std::string request { std::string(prefix).append(" ").append(remotePath) };
-       std::vector<std::string> args {prefix, remotePath};
+    void SynchronizeCommand::CreateLocalDirectory(const std::string &path)
+    {
+        Utils::Logger::inform(std::string("Creating directory '").append(path).append("' local..."));
+        changes_++;
 
-       Utils::Logger::inform(std::string("Downloading ").append(remotePath).append(" from server..."));
+        fs::create_directory(path);
+    }
 
-       auto command { DownloadFileCommand{server_, request, args, false} };
-       command.Execute();
-   }
+    void SynchronizeCommand::DownloadFile(const std::string &remotePath)
+    {
+        std::string prefix{"GET"};
+        std::string request{std::string(prefix).append(" ").append(remotePath)};
+        std::vector<std::string> args{prefix, remotePath};
 
-   void SynchronizeCommand::UploadFile(const std::string &localPath)
-   {
-       std::string prefix { "PUT" };
-       std::string request { std::string(prefix).append(" ").append(localPath) };
-       std::vector<std::string> args {prefix, localPath};
+        Utils::Logger::inform(std::string("Downloading ").append(remotePath).append(" from server..."));
+        changes_++;
 
-       Utils::Logger::inform(std::string("Uploading ").append(localPath).append(" to server..."));
+        auto command{DownloadFileCommand{server_, request, args, false}};
+        command.Execute();
+    }
 
-       auto command { UploadFileCommand{server_, request, args, false} };
-       command.Execute();
-   }
+    void SynchronizeCommand::UploadFile(const std::string &localPath)
+    {
+        std::string prefix{"PUT"};
+        std::string request{std::string(prefix).append(" ").append(localPath)};
+        std::vector<std::string> args{prefix, localPath};
+
+        Utils::Logger::inform(std::string("Uploading ").append(localPath).append(" to server..."));
+        changes_++;
+
+        auto command{UploadFileCommand{server_, request, args, false}};
+        command.Execute();
+    }
 }

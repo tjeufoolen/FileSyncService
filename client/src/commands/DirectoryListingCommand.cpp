@@ -75,10 +75,10 @@ namespace Commands {
 
         ItemType type { parts[0] == "F" ? ItemType::FILE : parts[0] == "D" ? ItemType::DIRECTORY : ItemType::OTHER };
         std::string& name { parts[1] };
-        std::string& path { path_ };
+        std::string& parentPath { path_ };
         std::string& modified_at { parts[2] };
         std::string& size { parts[3] };
 
-        items_.emplace_back(type, name, path, modified_at, size);
+        items_.emplace_back(type, name, parentPath, modified_at, size);
     }
 }
