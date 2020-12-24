@@ -21,7 +21,7 @@ namespace Commands {
     private:
         std::vector<DirectoryListingCommand::Item> GetDirectoryContents(const std::string& path);
         void CreateServerDirectory(const std::string& parent, const std::string& name);
-        void CreateLocalDirectory(const std::string& path);
+        void DeleteDirectoryOrFile(const std::string& path);
         void UploadFile(const std::string& localPath);
         void DownloadFile(const std::string& remotePath);
     };

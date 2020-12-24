@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "MakeDirectoryCommand.h"
 #include "DownloadFileCommand.h"
+#include "DeleteCommand.h"
 #include "UploadFileCommand.h"
 #include "TimestampConverter.h"
 
@@ -57,7 +58,7 @@ namespace Commands {
                     }
                 }
 
-                    // check if item is file
+                // check if item is file
                 else if (fs::is_regular_file(local)) {
                     auto it{getByName(name)};
 
@@ -95,20 +96,12 @@ namespace Commands {
                 std::string localPath{std::string(Client::BASE_DIRECTORY).append("/").append(relativePath)};
 
                 // when item is a directory
-                if (server.Type == DirectoryListingCommand::ItemType::DIRECTORY) {
+                if (server.Type == DirectoryListingCommand::ItemType::DIRECTORY ||
+                    server.Type == DirectoryListingCommand::ItemType::FILE) {
                     // check if directory exists local
                     if (!fs::exists(localPath)) {
-                        // if it doesn't exist create it
-                        CreateLocalDirectory(localPath);
-                    }
-                }
-
-                    // when item is a file
-                else if (server.Type == DirectoryListingCommand::ItemType::FILE) {
-                    // check if file exists local
-                    if (!fs::exists(localPath)) {
-                        // if it doesn't exist download it
-                        DownloadFile(relativePath);
+                        // if it doesn't exist delete it
+                        DeleteDirectoryOrFile(relativePath);
                     }
                 }
             }
@@ -148,12 +141,17 @@ namespace Commands {
         command.Execute();
     }
 
-    void SynchronizeCommand::CreateLocalDirectory(const std::string &path)
+    void SynchronizeCommand::DeleteDirectoryOrFile(const std::string &path)
     {
-        Utils::Logger::Inform(std::string("Creating directory '").append(path).append("' local..."));
+        std::string prefix{"DEL"};
+        std::string request{std::string(prefix).append(" ").append(path)};
+        std::vector<std::string> args{prefix, path};
+
+        Utils::Logger::Inform(std::string("Deleting ").append(path).append(" from server..."));
         changes_++;
 
-        fs::create_directory(path);
+        auto command{DeleteCommand{server_, request, args, false}};
+        command.Execute();
     }
 
     void SynchronizeCommand::DownloadFile(const std::string &remotePath)
