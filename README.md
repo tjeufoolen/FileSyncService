@@ -15,7 +15,6 @@
 5. Run the client project.
 5. Execute commands in the client :tada:
 
-
 ## Authors
 
 - [Tjeu Foolen](https://github.com/tjeufoolen)
