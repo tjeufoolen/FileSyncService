@@ -1,6 +1,4 @@
-# CPPLS2 Eindopdracht
-
-Elaboration of [final assessment](eindopdracht.pdf) for the CPPLS2 module.
+# CPP_FileSyncService
 
 ## Prerequisites
 
@@ -16,7 +14,6 @@ Elaboration of [final assessment](eindopdracht.pdf) for the CPPLS2 module.
 4. Run the server project.
 5. Run the client project.
 5. Execute commands in the client :tada:
-
 
 ## Authors
 
