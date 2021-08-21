@@ -1,6 +1,4 @@
-# CPPLS2 Eindopdracht
-
-Elaboration of [final assessment](eindopdracht.pdf) for the CPPLS2 module.
+# CPP_FileSyncService
 
 ## Prerequisites
 
